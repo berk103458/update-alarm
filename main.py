@@ -16,6 +16,7 @@ import pystray
 import notifier
 import updater
 from dashboard import DashboardWindow
+from login import LoginWindow
 from reader import load_excel, TR_WEEKDAY_NAMES
 from version import APP_NAME, APP_VERSION
 
@@ -302,5 +303,13 @@ if __name__ == "__main__":
         root = tk.Tk(); root.withdraw()
         tk.messagebox.showwarning(APP_NAME, "Uygulama zaten calisiyor!\nSistem tepsisine bakin.")
         sys.exit(0)
+
+    # Login ekrani – geçilmezse çıkış
+    _login_root = tk.Tk()
+    _login_root.withdraw()
+    if not LoginWindow(_login_root).show():
+        _login_root.destroy()
+        sys.exit(0)
+    _login_root.destroy()
 
     UpdateAlarmApp().run()

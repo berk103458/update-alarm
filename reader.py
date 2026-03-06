@@ -305,10 +305,16 @@ def _cycle_num(name: str) -> Optional[int]:
 
 
 def _extract_cycle_name(row_text: str) -> Optional[str]:
+    # Önce numaralı: "EnerjiSA Sunucu Update Cycle 2 Hk."
     m = re.search(r"(.{0,120}?update\s*cycle\s*\d+)", row_text, flags=re.IGNORECASE)
-    if not m: return None
-    name = re.sub(r"\s*hk\.?\s*$", "", m.group(1).strip(), flags=re.IGNORECASE).strip()
-    return " ".join(name.split())
+    if m:
+        name = re.sub(r"\s*hk\.?\s*$", "", m.group(1).strip(), flags=re.IGNORECASE).strip()
+        return " ".join(name.split())
+    # Sonra numarasız: "EnerjiSA Sunucu Update Cycle Hk." → Cycle 1 kabul et
+    m2 = re.search(r"(.{0,120}?update\s*cycle)\s*(?:hk\.?)?\s*$", row_text, flags=re.IGNORECASE)
+    if not m2: return None
+    name = re.sub(r"\s*hk\.?\s*$", "", m2.group(1).strip(), flags=re.IGNORECASE).strip()
+    return " ".join(name.split()) + " 1"
 
 
 def _server_name(cell_text: str) -> str:
@@ -321,9 +327,12 @@ def _server_name(cell_text: str) -> str:
     # "10.237.74.137--EUGBZNESSUS" → "EUGBZNESSUS"
     elif re.search(r'-{2,}', s):
         s = re.split(r'-{2,}', s, 1)[-1].strip()
-    # "10.237.76.45 EUGBZPICUSNEXT" (IP + boşluk) → "EUGBZPICUSNEXT"
+    # "10.237.76.45 EUGBZPICUSNEXT" (IP başta + boşluk) → "EUGBZPICUSNEXT"
     elif re.match(r'^\d+\.\d+\.\d+\.\d+\s+', s):
         s = re.sub(r'^\d+\.\d+\.\d+\.\d+\s+', '', s).strip()
+    # "EuGbzSeismer 10.140.1.143" (IP sonda) → "EuGbzSeismer"
+    elif re.search(r'\s+\d+\.\d+\.\d+\.\d+\s*$', s):
+        s = re.sub(r'\s+\d+\.\d+\.\d+\.\d+\s*$', '', s).strip()
     # Sadece kontrol karakterlerini temizle
     s = re.sub(r"[\x00-\x1f\x7f]", "", s).strip()
     return s
@@ -388,6 +397,10 @@ def load_excel(path: str, horizon_days: int = 365) -> AppData:
 
         if isinstance(c1, str) and normalize(c1) == "update gecilecek sunucular":
             current_rule = None; current_time = None; continue
+
+        # Cycle basligi satiri (ör. "EnerjiSA Sunucu Update Cycle 2 Hk.") – sunucu degil
+        if c1 is not None and re.search(r'\bupdate\s+cycle\b', str(c1), re.IGNORECASE):
+            continue
 
         # Tamamen bos satir: sadece gec, kurali sifirLAMA
         # (bos satir Excel'de görsel ayirici olarak kullanilabiliyor;
