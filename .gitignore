@@ -5,6 +5,7 @@ dist/
 build/
 *.spec
 settings.json
+Update Cycle.xlsx
 icon.ico
 *.ico
 logo_header.png

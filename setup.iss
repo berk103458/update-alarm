@@ -52,7 +52,8 @@ Name: "desktopicon";   Description: "Masaustu kisayolu olustur";              Gr
 Name: "startuprun";    Description: "Windows baslangicindan otomatik calistir"; GroupDescription: "Diger secenek:"; Flags: unchecked
 
 [Files]
-Source: "dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "dist\{#MyAppExeName}";    DestDir: "{app}"; Flags: ignoreversion
+Source: "Update Cycle.xlsx";       DestDir: "{app}"; Flags: ignoreversion onlyifdoesntexist
 
 [Icons]
 Name: "{group}\{#MyAppName}";                   Filename: "{app}\{#MyAppExeName}"

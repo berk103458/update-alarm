@@ -22,7 +22,20 @@ from version import APP_NAME, APP_VERSION
 # ──────────────── Ayar dosyasi ────────────────────────────────────────────────
 BASE_DIR      = Path(__file__).parent
 SETTINGS_FILE = BASE_DIR / "settings.json"
-DEFAULT_EXCEL = BASE_DIR.parent / "Update Cycle.xlsx"
+
+# PyInstaller ile paketlendiginde exe'nin yanindaki klasore bak,
+# gelistirme ortaminda ust klasore bak
+def _find_default_excel() -> Path:
+    candidates = [
+        BASE_DIR / "Update Cycle.xlsx",           # kurulu hali (exe yaninda)
+        BASE_DIR.parent / "Update Cycle.xlsx",    # gelistirme ortami
+    ]
+    for p in candidates:
+        if p.exists():
+            return p
+    return candidates[0]  # yoksa ilk yolu varsayilan yap
+
+DEFAULT_EXCEL = _find_default_excel()
 
 DEFAULT_SETTINGS: dict = {
     "excel_path":     str(DEFAULT_EXCEL),
