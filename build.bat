@@ -19,11 +19,11 @@ if errorlevel 1 (
 )
 echo       Tamam.
 
-:: ── 2. Ikon olustur ────────────────────────────────────────────────────────
-echo [2/5] icon.ico olusturuluyor...
-python create_icon.py
+:: ── 2. Ikon ve logo varliklari olustur ──────────────────────────────────────
+echo [2/5] Logo varlikları olusturuluyor (logo.png'den)...
+python generate_assets.py
 if errorlevel 1 (
-    echo HATA: Ikon olusturulamadi.
+    echo HATA: Logo varlikları olusturulamadi. logo.png mevcut mu?
     pause & exit /b 1
 )
 
