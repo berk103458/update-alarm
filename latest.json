@@ -1,0 +1,7 @@
+{
+  "version": "1.0.0",
+  "download_url": "https://github.com/berk103458/update-alarm/releases/download/v1.0.0/UpdateAlarm_Setup_1.0.0.exe",
+  "changelog": "Ilk resmi surum.\n- Sistem tepsisi uygulamasi\n- 24 saatlik otomatik bildirimler\n- 4 sekmeli dashboard\n- Excel'den tam okuma",
+  "release_date": "2026-03-06",
+  "min_version": "1.0.0"
+}
