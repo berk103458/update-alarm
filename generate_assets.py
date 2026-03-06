@@ -9,11 +9,15 @@ from PIL import Image, ImageDraw
 from pathlib import Path
 
 BASE = Path(__file__).parent
-SRC  = BASE / "logo.png"
 
+# oyya1.png varsa onu kullan, yoksa logo.png'ye don
+SRC = BASE / "oyya1.png"
 if not SRC.exists():
-    print("HATA: logo.png bulunamadi.")
+    SRC = BASE / "logo.png"
+if not SRC.exists():
+    print("HATA: oyya1.png veya logo.png bulunamadi.")
     raise SystemExit(1)
+print(f"Kaynak: {SRC.name}")
 
 orig = Image.open(SRC).convert("RGBA")
 print(f"Logo yuklendi: {orig.size[0]}x{orig.size[1]} {orig.mode}")
