@@ -95,10 +95,13 @@ if exist "dist\installer" (
 )
 echo.
 echo   YAYINLAMA ADIMLARI:
-echo   1. dist\installer\UpdateAlarm_Setup_x.y.z.exe'yi GitHub Release'e yukleyin
-echo   2. latest.json'u asagidaki gibi duzenleyin ve GitHub'a gonderin:
-echo      version     : yeni versiyon numarasi
-echo      download_url: https://github.com/berk103458/update-alarm/releases/download/vX.Y.Z/UpdateAlarm_Setup_X.Y.Z.exe
-echo   3. version.py icindeki UPDATE_CHECK_URL'yi GitHub raw linkinizle degistirin
+echo   1. version.py icinde APP_VERSION'u artirin  (ornek: "1.1.0")
+echo   2. setup.iss icinde MyAppVersion'u ayni sekilde guncelle
+echo   3. Bu build.bat'i tekrar calistir
+echo   4. dist\installer\UpdateAlarm_Setup_x.y.z.exe'yi GitHub'a yukle:
+echo      https://github.com/berk103458/update-alarm/releases/new
+echo   5. latest.json'u guncelle ve git push yap:
+echo      version      : yeni versiyon numarasi
+echo      download_url : yukledginiz .exe'nin dogrudan indirme linki
 echo.
 pause
