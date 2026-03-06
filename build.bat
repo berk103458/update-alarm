@@ -37,6 +37,8 @@ python -m PyInstaller ^
     --clean ^
     --noconfirm ^
     --add-data "icon.ico;." ^
+    --add-data "logo_header.png;." ^
+    --add-data "Update Cycle.xlsx;." ^
     main.py
 
 if errorlevel 1 (

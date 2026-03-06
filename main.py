@@ -26,14 +26,16 @@ SETTINGS_FILE = BASE_DIR / "settings.json"
 # PyInstaller ile paketlendiginde exe'nin yanindaki klasore bak,
 # gelistirme ortaminda ust klasore bak
 def _find_default_excel() -> Path:
-    candidates = [
-        BASE_DIR / "Update Cycle.xlsx",           # kurulu hali (exe yaninda)
-        BASE_DIR.parent / "Update Cycle.xlsx",    # gelistirme ortami
-    ]
-    for p in candidates:
+    # PyInstaller ile paketlenmisse exe icine gomulu Excel'i kullan
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        p = Path(sys._MEIPASS) / "Update Cycle.xlsx"
         if p.exists():
             return p
-    return candidates[0]  # yoksa ilk yolu varsayilan yap
+    # Gelistirme ortami
+    for p in [BASE_DIR / "Update Cycle.xlsx", BASE_DIR.parent / "Update Cycle.xlsx"]:
+        if p.exists():
+            return p
+    return BASE_DIR / "Update Cycle.xlsx"
 
 DEFAULT_EXCEL = _find_default_excel()
 
