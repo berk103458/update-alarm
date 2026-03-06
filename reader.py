@@ -132,7 +132,11 @@ def _to_time(h: str, m: str) -> dt.time:
     return dt.time(hh, mm)
 
 
-def parse_time_window(text: str) -> Tuple[dt.time, str]:
+def parse_time_window(text) -> Tuple[dt.time, str]:
+    # openpyxl bazen datetime.time nesnesi döndürür
+    if isinstance(text, dt.time):
+        t = text
+        return t, t.strftime("%H:%M")
     matches = re.findall(r"(\d{1,2})\s*[:.]\s*(\d{2})", str(text))
     if not matches:
         t = dt.time(9, 0)
@@ -309,10 +313,18 @@ def _extract_cycle_name(row_text: str) -> Optional[str]:
 
 def _server_name(cell_text: str) -> str:
     s = str(cell_text or "").strip()
+    # Parantez ve sonrasını sil: "EUGBZPBIPRX3(THEOBAOLD OLMUŞ...)" → "EUGBZPBIPRX3"
+    s = re.sub(r'\s*\(.*', '', s).strip()
     # "10.237.75.16 - EUGBZISSQL" → "EUGBZISSQL"
     if " - " in s:
         s = s.split(" - ", 1)[1].strip()
-    # Sadece kontrol karakterlerini ve newline'ı temizle; Türkçe karakterler dahil tüm görünür karakterler geçerli
+    # "10.237.74.137--EUGBZNESSUS" → "EUGBZNESSUS"
+    elif re.search(r'-{2,}', s):
+        s = re.split(r'-{2,}', s, 1)[-1].strip()
+    # "10.237.76.45 EUGBZPICUSNEXT" (IP + boşluk) → "EUGBZPICUSNEXT"
+    elif re.match(r'^\d+\.\d+\.\d+\.\d+\s+', s):
+        s = re.sub(r'^\d+\.\d+\.\d+\.\d+\s+', '', s).strip()
+    # Sadece kontrol karakterlerini temizle
     s = re.sub(r"[\x00-\x1f\x7f]", "", s).strip()
     return s
 
@@ -321,8 +333,8 @@ def _split_mails(text: str) -> List[str]:
     raw = str(text or "").strip()
     if not raw: return []
     seen, out = set(), []
-    for p in re.split(r"[,\n; ]+", raw):
-        p = p.strip()
+    for p in re.split(r"[,\n;\s\u00a0]+", raw):
+        p = p.strip().strip("\u00a0")
         if p and "@" in p and p.lower() not in seen:
             seen.add(p.lower()); out.append(p)
     return out
@@ -393,8 +405,12 @@ def load_excel(path: str, horizon_days: int = 365) -> AppData:
 
         if c2 is not None and str(c2).strip():
             current_rule = str(c2).strip()
-        if c3 is not None and str(c3).strip():
-            current_time = str(c3).strip()
+        if c3 is not None:
+            # datetime.time nesnesini doğrudan sakla, string ise strip et
+            if isinstance(c3, dt.time):
+                current_time = c3
+            elif str(c3).strip():
+                current_time = str(c3).strip()
 
         # Sunucuyu her halukarda cycle listesine ekle (event üretilip üretilmemesinden bağımsız)
         if server not in cycle_servers.get(current_cycle, []):
