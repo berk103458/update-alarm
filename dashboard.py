@@ -226,6 +226,19 @@ class DashboardWindow:
     def _build_ui(self):
         # Baslik + durum cubugu
         top = ttk.Frame(self.win); top.pack(fill="x", padx=16, pady=(12, 4))
+
+        # Logo (varsa goster)
+        try:
+            from PIL import Image, ImageTk
+            from pathlib import Path
+            logo_path = Path(__file__).parent / "logo_header.png"
+            if logo_path.exists():
+                _logo_img = Image.open(logo_path).resize((40, 40), Image.LANCZOS)
+                self._logo_tk = ImageTk.PhotoImage(_logo_img)
+                tk.Label(top, image=self._logo_tk, bg=BG).pack(side="left", padx=(0, 8))
+        except Exception:
+            pass
+
         ttk.Label(top, text="OYYA1UPDATE ALARM", style="Header.TLabel").pack(side="left")
         ttk.Button(top, text="Yenile", command=self.reload, style="Accent.TButton").pack(side="right", padx=(6, 0))
         ttk.Button(top, text="Excel Degistir", command=self._browse_excel).pack(side="right")

@@ -7,3 +7,6 @@ build/
 settings.json
 icon.ico
 *.ico
+logo_header.png
+wizard_main.bmp
+wizard_small.bmp
