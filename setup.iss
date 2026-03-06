@@ -3,7 +3,7 @@
 ;  Derleme: ISCC.exe setup.iss   (veya build.bat ile otomatik)
 ; ============================================================
 
-#define MyAppName      "Update Alarm"
+#define MyAppName      "OYYA1UPDATE ALARM"
 #define MyAppVersion   "1.0.0"
 #define MyAppPublisher "Your Company"
 #define MyAppURL       "https://github.com/berk103458/update-alarm"

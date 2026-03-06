@@ -33,7 +33,7 @@ def _notify_plyer(title: str, message: str):
     notification.notify(
         title=title,
         message=message,
-        app_name="Update Alarm",
+        app_name="OYYA1UPDATE ALARM",
         timeout=10,
     )
 

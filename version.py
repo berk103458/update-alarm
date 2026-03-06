@@ -1,4 +1,4 @@
-APP_NAME    = "Update Alarm"
+APP_NAME    = "OYYA1UPDATE ALARM"
 APP_VERSION = "1.0.0"
 
 # Bu URL'yi GitHub'a yuklediginiz latest.json adresiyle degistirin.

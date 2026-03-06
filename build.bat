@@ -1,11 +1,11 @@
 @echo off
 setlocal enabledelayedexpansion
 cd /d "%~dp0"
-title Update Alarm - Build Pipeline
+title OYYA1UPDATE ALARM - Build Pipeline
 
 echo.
 echo  ================================================
-echo   Update Alarm ^| Build Pipeline
+echo   OYYA1UPDATE ALARM ^| Build Pipeline
 echo  ================================================
 echo.
 

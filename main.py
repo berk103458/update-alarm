@@ -1,5 +1,5 @@
 """
-Update Alarm Desktop App
+OYYA1UPDATE ALARM Desktop App
 Sistem tepsisi + gunluk bildirim + dashboard + otomatik guncelleme
 """
 import datetime as dt

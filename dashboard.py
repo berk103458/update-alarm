@@ -175,7 +175,7 @@ class DashboardWindow:
         self._filter_after: Optional[str] = None
 
         self.win = tk.Toplevel(root)
-        self.win.title("Update Alarm - Dashboard")
+        self.win.title("OYYA1UPDATE ALARM - Dashboard")
         self.win.configure(bg=BG)
         self.win.geometry("1100x680")
         self.win.resizable(True, True)
@@ -226,7 +226,7 @@ class DashboardWindow:
     def _build_ui(self):
         # Baslik + durum cubugu
         top = ttk.Frame(self.win); top.pack(fill="x", padx=16, pady=(12, 4))
-        ttk.Label(top, text="Update Alarm", style="Header.TLabel").pack(side="left")
+        ttk.Label(top, text="OYYA1UPDATE ALARM", style="Header.TLabel").pack(side="left")
         ttk.Button(top, text="Yenile", command=self.reload, style="Accent.TButton").pack(side="right", padx=(6, 0))
         ttk.Button(top, text="Excel Degistir", command=self._browse_excel).pack(side="right")
 
@@ -644,6 +644,6 @@ class DashboardWindow:
     def _test_notify(self):
         import notifier
         notifier.notify(
-            "Update Alarm - Test",
+            "OYYA1UPDATE ALARM - Test",
             "Bildirim sistemi calisıyor! Bu bir test mesajidir."
         )
