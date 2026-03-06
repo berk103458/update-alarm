@@ -8,7 +8,7 @@
 #define MyAppPublisher "Your Company"
 #define MyAppURL       "https://github.com/berk103458/update-alarm"
 #define MyAppExeName   "UpdateAlarm.exe"
-#define MyAppID        "{A7B3C2D1-E4F5-6789-ABCD-EF0123456789}"
+#define MyAppID        "{{A7B3C2D1-E4F5-6789-ABCD-EF0123456789}"
 
 [Setup]
 AppId={#MyAppID}

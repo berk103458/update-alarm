@@ -54,8 +54,9 @@ echo [4/5] Installer olusturuluyor (Inno Setup)...
 if not exist "dist\installer" mkdir "dist\installer"
 
 :: Inno Setup yollarini ara
-set ISCC=""
+set ISCC=
 for %%P in (
+    "%LOCALAPPDATA%\Programs\InnoSetup6\ISCC.exe"
     "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
     "C:\Program Files\Inno Setup 6\ISCC.exe"
     "C:\Program Files (x86)\Inno Setup 5\ISCC.exe"
@@ -63,7 +64,7 @@ for %%P in (
     if exist %%P set ISCC=%%P
 )
 
-if %ISCC%=="" (
+if not defined ISCC (
     echo.
     echo  [!] Inno Setup bulunamadi.
     echo      Inno Setup'i buradan yukleyin:
