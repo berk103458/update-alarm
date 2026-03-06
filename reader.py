@@ -309,9 +309,12 @@ def _extract_cycle_name(row_text: str) -> Optional[str]:
 
 def _server_name(cell_text: str) -> str:
     s = str(cell_text or "").strip()
+    # "10.237.75.16 - EUGBZISSQL" → "EUGBZISSQL"
     if " - " in s:
         s = s.split(" - ", 1)[1].strip()
-    return re.sub(r"[^A-Za-z0-9._-]", "", s)
+    # Sadece kontrol karakterlerini ve newline'ı temizle; Türkçe karakterler dahil tüm görünür karakterler geçerli
+    s = re.sub(r"[\x00-\x1f\x7f]", "", s).strip()
+    return s
 
 
 def _split_mails(text: str) -> List[str]:
@@ -374,10 +377,14 @@ def load_excel(path: str, horizon_days: int = 365) -> AppData:
         if isinstance(c1, str) and normalize(c1) == "update gecilecek sunucular":
             current_rule = None; current_time = None; continue
 
+        # Tamamen bos satir: sadece gec, kurali sifirLAMA
+        # (bos satir Excel'de görsel ayirici olarak kullanilabiliyor;
+        #  sifirlamak sonraki sunuculari kaybettirir)
         if all(v is None for v in (c1, c2, c3, c4, c5)):
-            current_rule = None; current_time = None; continue
+            continue
 
-        if not isinstance(c1, str) or not str(c1).strip():
+        # c1 bos ya da None ise bu satirda sunucu yok
+        if c1 is None or not str(c1).strip():
             continue
 
         server = _server_name(str(c1))
@@ -389,8 +396,16 @@ def load_excel(path: str, horizon_days: int = 365) -> AppData:
         if c3 is not None and str(c3).strip():
             current_time = str(c3).strip()
 
+        # Sunucuyu her halukarda cycle listesine ekle (event üretilip üretilmemesinden bağımsız)
+        if server not in cycle_servers.get(current_cycle, []):
+            cycle_servers.setdefault(current_cycle, []).append(server)
+
         if not current_rule or not current_time:
+            # Kural/saat bilinmiyor ama sunucu zaten cycle'a eklendi
             continue
+
+        if current_rule not in cycle_rules.get(current_cycle, []):
+            cycle_rules.setdefault(current_cycle, []).append(current_rule)
 
         start_t, window = parse_time_window(current_time)
 
@@ -423,9 +438,6 @@ def load_excel(path: str, horizon_days: int = 365) -> AppData:
             )
             events.append(ev)
             cycle_events.setdefault(current_cycle, []).append(ev)
-            cycle_servers.setdefault(current_cycle, []).append(server)
-            if current_rule not in cycle_rules.get(current_cycle, []):
-                cycle_rules.setdefault(current_cycle, []).append(current_rule)
 
     events.sort(key=lambda e: (e.when, e.cycle, e.server))
 
