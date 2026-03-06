@@ -49,16 +49,23 @@ DEFAULT_SETTINGS: dict = {
 
 
 def load_settings() -> dict:
+    s = DEFAULT_SETTINGS.copy()
     if SETTINGS_FILE.exists():
         try:
             with open(SETTINGS_FILE, "r", encoding="utf-8") as f:
-                s = json.load(f)
+                saved = json.load(f)
             for k, v in DEFAULT_SETTINGS.items():
-                s.setdefault(k, v)
-            return s
+                saved.setdefault(k, v)
+            s = saved
         except Exception:
             pass
-    return DEFAULT_SETTINGS.copy()
+
+    # Kaydedilmis Excel yolu artik mevcut degilse gomulu Excel'e don
+    excel_path = s.get("excel_path", "")
+    if not excel_path or not Path(excel_path).exists():
+        s["excel_path"] = str(DEFAULT_EXCEL)
+
+    return s
 
 
 def save_settings(s: dict):
